@@ -6,6 +6,7 @@ import com.testing.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,11 +22,11 @@ public class ClientService {
     }
 
     public void addClient(ClientApi client) {
-        clientRepository.save(clientApiClientMapper.orderApiToOrderDto(client));
+        clientRepository.save(clientApiClientMapper.clientApiToClientDto(client));
     }
 
     public ClientApi getClient(long id) {
-        Optional<ClientApi> order = Optional.ofNullable(clientApiClientMapper.orderDtoToOrderApi(clientRepository.findById(id)));
-        return order.get();
+        return clientApiClientMapper.clientDtoToClientApi(Optional.ofNullable(clientRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("client id: " + id))));
     }
 }

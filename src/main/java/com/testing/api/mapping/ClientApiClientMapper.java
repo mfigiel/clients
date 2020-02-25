@@ -8,7 +8,7 @@ import java.util.Optional;
 
 @Mapper(componentModel = "ClientApiClientMapper")
 public interface ClientApiClientMapper {
-    ClientApi orderDtoToOrderApi(Optional<Client> source);
-    Client orderApiToOrderDto(ClientApi source);
+    ClientApi clientDtoToClientApi(Optional<Client> source);
+    Client clientApiToClientDto(ClientApi source);
 }
 
