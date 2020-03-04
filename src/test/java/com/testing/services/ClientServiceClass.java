@@ -1,8 +1,8 @@
 package com.testing.services;
 
-import com.testing.api.resource.OrderApi;
-import com.testing.repository.OrderRepository;
-import com.testing.repository.entity.Order;
+import com.testing.api.resource.ClientApi;
+import com.testing.repository.ClientRepository;
+import com.testing.repository.entity.Client;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,51 +15,52 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @RunWith(SpringRunner.class)
 public class ClientServiceClass {
 
     @Autowired
-    private OrderService orderService;
+    private ClientService clientService;
 
     @MockBean
-    private OrderRepository orderRepository;
+    private ClientRepository orderRepository;
 
     @Before
     public void setUp() {
-        Order order = new Order();
-        order.setId(1);
-        order.setClientId(2);
+        Client client = new Client();
+        client.setId(1);
+        client.setName("sampleName");
 
         Mockito.when(orderRepository.findById((long) 1))
-                .thenReturn(Optional.of(order));
+                .thenReturn(Optional.of(client));
 
-        List<Order> orderList = new ArrayList<>();
+        List<Client> orderList = new ArrayList<>();
 
-        Order orderSecond = new Order();
-        orderSecond.setId(2);
-        orderList.add(orderSecond);
+        Client clientSecond = new Client();
+        clientSecond.setName("sampleName2");
+        orderList.add(clientSecond);
         Mockito.when(orderRepository.findAll())
                 .thenReturn(orderList);
     }
 
     @Test
     public void getOneOrder() {
-        OrderApi found = orderService.getOrder(1);
+        ClientApi found = clientService.getClient(1);
 
-        assertThat(found.getClientId())
-                .isEqualTo(2);
-        assertThat(found.getId())
-                .isEqualTo(1);
+        assertThat(found.getName())
+                .isEqualTo("sampleName");
     }
 
     @Test
     public void getAllOrders() {
-        List<OrderApi> found = orderService.getOrders();
+        List<ClientApi> found = clientService.getClients();
 
         assertEquals(found.size(), 2);
-        assertEquals(found.get(0).getId(), 1);
-        assertEquals(found.get(1).getId(), 2);
+        assertThat(found.get(0).getName())
+                .isEqualTo("sampleName");
+        assertThat(found.get(1).getName())
+                .isEqualTo("sampleName2");
     }
 }

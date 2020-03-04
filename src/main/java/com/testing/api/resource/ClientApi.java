@@ -13,6 +13,8 @@ import javax.validation.constraints.NotNull;
 @Setter
 public class ClientApi {
 
+    private Long id;
+
     @NotNull(message = "Name is mandatory and must not be blank.")
     private String name;
 

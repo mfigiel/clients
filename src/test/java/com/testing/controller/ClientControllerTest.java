@@ -1,11 +1,10 @@
 package com.testing.controller;
 
+import com.testing.api.resource.AddressApi;
 import com.testing.api.resource.ClientApi;
-import com.testing.api.resource.OrderApi;
 import com.testing.repository.ClientRepository;
-import com.testing.repository.OrderRepository;
+import com.testing.repository.entity.Address;
 import com.testing.repository.entity.Client;
-import com.testing.repository.entity.Order;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,6 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,7 +50,7 @@ public class ClientControllerTest {
     @Test
     public void getOrder_NoResults() throws Exception {
         mockMvc
-                .perform(get("/order", 1)
+                .perform(get("/client", 1)
                         .param("id", "1"))
                 .andExpect(status().is4xxClientError());
 
@@ -70,75 +68,95 @@ public class ClientControllerTest {
 
         ClientApi clientApi = testRestTemplate.getForObject(HTTP_LOCALHOST + port + "/client/1", ClientApi.class);
 
-        assertEquals(clientApi.getId(), 1);
-        assertEquals(clientApi.getClientId(), 2);
-        assertEquals(clientApi.getOrderDate(), null);
-        assertEquals(clientApi.getProducts().size(), 1);
+        assertEquals(clientApi.getName(), "sampleName");
+        assertEquals(clientApi.getSurname(), "sampleSurname");
+        assertEquals(clientApi.getAddress().getCity(), "Gliwice");
+        assertEquals(clientApi.getAddress().getStreet(), "Zwycięstwa");
+        assertEquals(clientApi.getAddress().getZipCode(), "44-100");
+        assertEquals(clientApi.getAddress().getFlatNumber(), "5");
+        assertEquals(clientApi.getAddress().getHouseNumber(), "65");
     }
 
     @Test
     public void getOrders() {
         // act
 
-        clientRepository.save(getTestClient(1));
         clientRepository.save(getTestClient(2));
+        clientRepository.save(getTestClient(3));
 
-        ResponseEntity<List<OrderApi>> orderFromDb = testRestTemplate.exchange(HTTP_LOCALHOST + port + "/orders",  HttpMethod.GET, null, new ParameterizedTypeReference<List<OrderApi>>() {
+        ResponseEntity<List<ClientApi>> clientsFromDb = testRestTemplate.exchange(HTTP_LOCALHOST + port + "/clients",  HttpMethod.GET, null, new ParameterizedTypeReference<List<ClientApi>>() {
         });
 
         // assert
-        assertEquals(orderFromDb.getBody().size(), 2);
-        OrderApi order = orderFromDb.getBody().get(0);
-        assertEquals(order.getId(), 1);
-        assertEquals(order.getClientId(), 2);
-        assertEquals(order.getOrderDate(), null);
-        assertEquals(order.getProducts().size(), 1);
+        assertEquals(clientsFromDb.getBody().size(), 2);
+        ClientApi clientApi = clientsFromDb.getBody().get(0);
+        assertEquals(clientApi.getName(), "sampleName");
+        assertEquals(clientApi.getSurname(), "sampleSurname");
+        assertEquals(clientApi.getAddress().getCity(), "Gliwice");
+        assertEquals(clientApi.getAddress().getStreet(), "Zwycięstwa");
+        assertEquals(clientApi.getAddress().getZipCode(), "44-100");
+        assertEquals(clientApi.getAddress().getFlatNumber(), "5");
+        assertEquals(clientApi.getAddress().getHouseNumber(), "65");
 
-        OrderApi secondOrder = orderFromDb.getBody().get(1);
-        assertEquals(secondOrder.getId(), 2);
-        assertEquals(secondOrder.getClientId(), 2);
-        assertEquals(secondOrder.getOrderDate(), null);
-        assertEquals(secondOrder.getProducts().size(), 1);
+        ClientApi secondClient = clientsFromDb.getBody().get(1);
+        assertEquals(secondClient.getName(), "sampleName");
+        assertEquals(secondClient.getSurname(), "sampleSurname");
+        assertEquals(secondClient.getAddress().getCity(), "Gliwice");
+        assertEquals(secondClient.getAddress().getStreet(), "Zwycięstwa");
+        assertEquals(secondClient.getAddress().getZipCode(), "44-100");
+        assertEquals(secondClient.getAddress().getFlatNumber(), "5");
+        assertEquals(secondClient.getAddress().getHouseNumber(), "65");
     }
 
     @Test
     public void addOrder() {
         // act
-        OrderApi order = getTestOrderApi(1);
-        testRestTemplate.postForObject(HTTP_LOCALHOST + port + "/orders", order, OrderApi.class);
+        ClientApi client = getTestClientApi(1);
+        testRestTemplate.postForObject(HTTP_LOCALHOST + port + "/clients", client, ClientApi.class);
 
 
-        Optional<Order> orderFromDbOptional = clientRepository.findById(1L);
+        Optional<Client> clientsFromDb = clientRepository.findById(1L);
 
-        Order orderFromDb = orderFromDbOptional.get();
+        Client clientApi = clientsFromDb.get();
         // assert
-        assertEquals(orderFromDb.getId(), 1);
-        assertEquals(orderFromDb.getClientId(), 2);
-        assertEquals(orderFromDb.getOrderDate(), null);
-        assertEquals(orderFromDb.getProducts().size(), 1);
+        assertEquals(clientApi.getName(), "sampleName");
+        assertEquals(clientApi.getSurname(), "sampleSurname");
+        assertEquals(clientApi.getAddress().getCity(), "Gliwice");
+        assertEquals(clientApi.getAddress().getStreet(), "Zwycięstwa");
+        assertEquals(clientApi.getAddress().getZipCode(), "44-100");
+        assertEquals(clientApi.getAddress().getFlatNumber(), "5");
+        assertEquals(clientApi.getAddress().getHouseNumber(), "65");
     }
 
-    private OrderApi getTestOrderApi(long id) {
-        OrderApi order = new OrderApi();
-        order.setId(id);
-        List<String> productList = new ArrayList<>();
-        productList.add("1");
-        order.setProducts(productList);
-        order.setClientId(2);
-        order.setOrderDate(null);
+    private ClientApi getTestClientApi(long id) {
+        ClientApi clientApi = new ClientApi();
+        clientApi.setName("sampleName");
+        clientApi.setSurname("sampleSurname");
+        AddressApi address = new AddressApi();
+        address.setCity("Gliwice");
+        address.setStreet("Zwycięstwa");
+        address.setZipCode("44-100");
+        address.setFlatNumber(5);
+        address.setHouseNumber(65);
+        clientApi.setAddress(address);
 
-        return order;
+        return clientApi;
     }
 
-    private Order getTestClient(long id) {
-        Order order = new Order();
-        order.setId(id);
-        List<String> productList = new ArrayList<>();
-        productList.add("1");
-        order.setProducts(productList);
-        order.setClientId(2);
-        order.setOrderDate(null);
+    private Client getTestClient(long id) {
+        Client client = new Client();
+        client.setId(id);
+        client.setName("sampleName");
+        client.setSurname("sampleSurname");
+        Address address = new Address();
+        address.setId(id);
+        address.setCity("Gliwice");
+        address.setStreet("Zwycięstwa");
+        address.setZipCode("44-100");
+        address.setFlatNumber(5);
+        address.setHouseNumber(65);
+        client.setAddress(address);
 
-        return order;
+        return client;
     }
 }
