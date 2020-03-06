@@ -20,12 +20,13 @@ public class ClientController {
     }
 
     @PostMapping("/clients")
-    public void addOrder(@RequestBody ClientApi client) {
+    public void addClient(@RequestBody ClientApi client) {
         clientService.addClient(client);
     }
 
     @RequestMapping(value = "/client/{id}", method = RequestMethod.GET)
     public ClientApi getClientInformation(@PathVariable("id") long id) {
+        ClientApi a = clientService.getClient(id);
         return clientService.getClient(id);
 
     }

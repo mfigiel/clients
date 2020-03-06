@@ -3,6 +3,7 @@ package com.testing.services;
 import com.testing.api.mapping.ClientApiClientMapperImpl;
 import com.testing.api.resource.ClientApi;
 import com.testing.repository.ClientRepository;
+import com.testing.repository.entity.Client;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,7 @@ public class ClientService {
     ClientApiClientMapperImpl clientApiClientMapper = new ClientApiClientMapperImpl();
 
     public List<ClientApi> getClients() {
-        return (List) clientRepository.findAll();
+        return clientApiClientMapper.clientListToClientApiList((List<Client>) clientRepository.findAll());
     }
 
     public void addClient(ClientApi client) {
@@ -26,7 +27,9 @@ public class ClientService {
     }
 
     public ClientApi getClient(long id) {
-        return clientApiClientMapper.clientDtoToClientApi(Optional.ofNullable(clientRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("client id: " + id))));
+        Optional<Client> client = Optional.ofNullable(clientRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("client id: " + id)));
+
+        return clientApiClientMapper.clientDtoToClientApi(client.get());
     }
 }

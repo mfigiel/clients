@@ -4,11 +4,12 @@ import com.testing.api.resource.ClientApi;
 import com.testing.repository.entity.Client;
 import org.mapstruct.Mapper;
 
-import java.util.Optional;
+import java.util.List;
 
 @Mapper(componentModel = "ClientApiClientMapper")
 public interface ClientApiClientMapper {
-    ClientApi clientDtoToClientApi(Optional<Client> source);
+    ClientApi clientDtoToClientApi(Client source);
     Client clientApiToClientDto(ClientApi source);
+    List<ClientApi> clientListToClientApiList(List<Client> source);
 }
 

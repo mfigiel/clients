@@ -48,7 +48,7 @@ public class ClientControllerTest {
     private ClientRepository clientRepository;
 
     @Test
-    public void getOrder_NoResults() throws Exception {
+    public void getClient_NoResults() throws Exception {
         mockMvc
                 .perform(get("/client", 1)
                         .param("id", "1"))
@@ -59,10 +59,10 @@ public class ClientControllerTest {
     }
 
     @Test
-    public void getOrder() {
+    public void getClient() {
         // act
 
-        Client client = getTestClient(1);
+        Client client = getTestClient(1L);
 
         clientRepository.save(client);
 
@@ -78,11 +78,11 @@ public class ClientControllerTest {
     }
 
     @Test
-    public void getOrders() {
+    public void getClients() {
         // act
 
-        clientRepository.save(getTestClient(2));
-        clientRepository.save(getTestClient(3));
+        clientRepository.save(getTestClient(2L));
+        clientRepository.save(getTestClient(3L));
 
         ResponseEntity<List<ClientApi>> clientsFromDb = testRestTemplate.exchange(HTTP_LOCALHOST + port + "/clients",  HttpMethod.GET, null, new ParameterizedTypeReference<List<ClientApi>>() {
         });
@@ -109,9 +109,9 @@ public class ClientControllerTest {
     }
 
     @Test
-    public void addOrder() {
+    public void addClient() {
         // act
-        ClientApi client = getTestClientApi(1);
+        ClientApi client = getTestClientApi(1L);
         testRestTemplate.postForObject(HTTP_LOCALHOST + port + "/clients", client, ClientApi.class);
 
 
@@ -128,7 +128,7 @@ public class ClientControllerTest {
         assertEquals(clientApi.getAddress().getHouseNumber(), "65");
     }
 
-    private ClientApi getTestClientApi(long id) {
+    private ClientApi getTestClientApi(Long id) {
         ClientApi clientApi = new ClientApi();
         clientApi.setName("sampleName");
         clientApi.setSurname("sampleSurname");
@@ -143,7 +143,7 @@ public class ClientControllerTest {
         return clientApi;
     }
 
-    private Client getTestClient(long id) {
+    private Client getTestClient(Long id) {
         Client client = new Client();
         client.setId(id);
         client.setName("sampleName");

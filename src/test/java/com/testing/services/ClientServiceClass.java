@@ -8,7 +8,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
@@ -21,32 +23,43 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @RunWith(SpringRunner.class)
 public class ClientServiceClass {
 
+    @TestConfiguration
+    static class ClientServiceImplTestContextConfiguration {
+
+        @Bean
+        public ClientService clientService() {
+            return new ClientService();
+        }
+    }
+
     @Autowired
     private ClientService clientService;
 
     @MockBean
-    private ClientRepository orderRepository;
+    private ClientRepository clientRepository;
 
     @Before
     public void setUp() {
         Client client = new Client();
-        client.setId(1);
+        client.setId(1L);
         client.setName("sampleName");
 
-        Mockito.when(orderRepository.findById((long) 1))
+        Mockito.when(clientRepository.findById((long) 1))
                 .thenReturn(Optional.of(client));
 
-        List<Client> orderList = new ArrayList<>();
+        List<Client> clientList = new ArrayList<>();
 
         Client clientSecond = new Client();
+        clientSecond.setId(2L);
         clientSecond.setName("sampleName2");
-        orderList.add(clientSecond);
-        Mockito.when(orderRepository.findAll())
-                .thenReturn(orderList);
+        clientList.add(client);
+        clientList.add(clientSecond);
+        Mockito.when(clientRepository.findAll())
+                .thenReturn(clientList);
     }
 
     @Test
-    public void getOneOrder() {
+    public void getOneClient() {
         ClientApi found = clientService.getClient(1);
 
         assertThat(found.getName())
@@ -54,7 +67,7 @@ public class ClientServiceClass {
     }
 
     @Test
-    public void getAllOrders() {
+    public void getAllClients() {
         List<ClientApi> found = clientService.getClients();
 
         assertEquals(found.size(), 2);
