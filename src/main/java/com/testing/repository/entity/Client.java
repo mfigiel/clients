@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "Client")
+@Table(name = "Clients")
 public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,10 +20,5 @@ public class Client {
     private String name;
 
     private String surname;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id")
-    private Address address;
-
 
 }

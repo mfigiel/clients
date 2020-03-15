@@ -121,11 +121,6 @@ public class ClientControllerTest {
         // assert
         assertEquals(clientApi.getName(), "sampleName");
         assertEquals(clientApi.getSurname(), "sampleSurname");
-        assertEquals(clientApi.getAddress().getCity(), "Gliwice");
-        assertEquals(clientApi.getAddress().getStreet(), "Zwycięstwa");
-        assertEquals(clientApi.getAddress().getZipCode(), "44-100");
-        assertEquals(clientApi.getAddress().getFlatNumber(), "5");
-        assertEquals(clientApi.getAddress().getHouseNumber(), "65");
     }
 
     private ClientApi getTestClientApi(Long id) {
@@ -138,7 +133,6 @@ public class ClientControllerTest {
         address.setZipCode("44-100");
         address.setFlatNumber(5);
         address.setHouseNumber(65);
-        clientApi.setAddress(address);
 
         return clientApi;
     }
@@ -155,7 +149,6 @@ public class ClientControllerTest {
         address.setZipCode("44-100");
         address.setFlatNumber(5);
         address.setHouseNumber(65);
-        client.setAddress(address);
 
         return client;
     }
