@@ -22,8 +22,11 @@ public class ClientService {
         return clientApiClientMapper.clientListToClientApiList((List<Client>) clientRepository.findAll());
     }
 
-    public void addClient(ClientApi client) {
-        clientRepository.save(clientApiClientMapper.clientApiToClientDto(client));
+    public ClientApi addClient(ClientApi client) {
+        Client clientDto = clientApiClientMapper.clientApiToClientDto(client);
+        clientDto.getAddress().setClient(clientDto);
+        clientRepository.save(clientDto);
+        return clientApiClientMapper.clientDtoToClientApi(clientDto);
     }
 
     public ClientApi getClient(long id) {

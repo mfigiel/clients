@@ -20,8 +20,8 @@ public class ClientController {
     }
 
     @PostMapping("/clients")
-    public void addClient(@RequestBody ClientApi client) {
-        clientService.addClient(client);
+    public ClientApi addClient(@RequestBody ClientApi client) {
+        return clientService.addClient(client);
     }
 
     @RequestMapping(value = "/client/{id}", method = RequestMethod.GET)

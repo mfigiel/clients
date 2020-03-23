@@ -8,7 +8,6 @@ import javax.persistence.*;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
 @Table(name = "Address")
 public class Address {
 
@@ -20,5 +19,13 @@ public class Address {
     private Integer houseNumber;
     private Integer flatNumber;
     private String zipCode;
+
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "client_id", nullable = false)
+    private Client client;
+
+    public Address() {
+
+    }
 
 }

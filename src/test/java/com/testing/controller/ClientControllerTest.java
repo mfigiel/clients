@@ -18,12 +18,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import sampleDataForTests.SampleClientData;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -47,6 +49,8 @@ public class ClientControllerTest {
     @Autowired
     private ClientRepository clientRepository;
 
+    private SampleClientData sampleClientData = new SampleClientData();
+
     @Test
     public void getClient_NoResults() throws Exception {
         mockMvc
@@ -62,41 +66,40 @@ public class ClientControllerTest {
     public void getClient() {
         // act
 
-        Client client = getTestClient(1L);
+        Client client = sampleClientData.getTestClient();
 
         clientRepository.save(client);
 
-        ClientApi clientApi = testRestTemplate.getForObject(HTTP_LOCALHOST + port + "/client/1", ClientApi.class);
+        ClientApi clientApi = testRestTemplate.getForObject(HTTP_LOCALHOST + port + "/client/".concat(client.getId().toString()), ClientApi.class);
 
         assertEquals(clientApi.getName(), "sampleName");
         assertEquals(clientApi.getSurname(), "sampleSurname");
         assertEquals(clientApi.getAddress().getCity(), "Gliwice");
         assertEquals(clientApi.getAddress().getStreet(), "Zwycięstwa");
         assertEquals(clientApi.getAddress().getZipCode(), "44-100");
-        assertEquals(clientApi.getAddress().getFlatNumber(), "5");
-        assertEquals(clientApi.getAddress().getHouseNumber(), "65");
+        assertEquals(clientApi.getAddress().getFlatNumber(), 5);
+        assertEquals(clientApi.getAddress().getHouseNumber(), 65);
     }
 
     @Test
     public void getClients() {
         // act
 
-        clientRepository.save(getTestClient(2L));
-        clientRepository.save(getTestClient(3L));
-
+        clientRepository.save(sampleClientData.getTestClient());
+        clientRepository.save(sampleClientData.getTestClient());
         ResponseEntity<List<ClientApi>> clientsFromDb = testRestTemplate.exchange(HTTP_LOCALHOST + port + "/clients",  HttpMethod.GET, null, new ParameterizedTypeReference<List<ClientApi>>() {
         });
 
         // assert
-        assertEquals(clientsFromDb.getBody().size(), 2);
+        assertThat(clientsFromDb.getBody().size() > 0);
         ClientApi clientApi = clientsFromDb.getBody().get(0);
         assertEquals(clientApi.getName(), "sampleName");
         assertEquals(clientApi.getSurname(), "sampleSurname");
         assertEquals(clientApi.getAddress().getCity(), "Gliwice");
         assertEquals(clientApi.getAddress().getStreet(), "Zwycięstwa");
         assertEquals(clientApi.getAddress().getZipCode(), "44-100");
-        assertEquals(clientApi.getAddress().getFlatNumber(), "5");
-        assertEquals(clientApi.getAddress().getHouseNumber(), "65");
+        assertEquals(clientApi.getAddress().getFlatNumber(), 5);
+        assertEquals(clientApi.getAddress().getHouseNumber(), 65);
 
         ClientApi secondClient = clientsFromDb.getBody().get(1);
         assertEquals(secondClient.getName(), "sampleName");
@@ -104,52 +107,22 @@ public class ClientControllerTest {
         assertEquals(secondClient.getAddress().getCity(), "Gliwice");
         assertEquals(secondClient.getAddress().getStreet(), "Zwycięstwa");
         assertEquals(secondClient.getAddress().getZipCode(), "44-100");
-        assertEquals(secondClient.getAddress().getFlatNumber(), "5");
-        assertEquals(secondClient.getAddress().getHouseNumber(), "65");
+        assertEquals(secondClient.getAddress().getFlatNumber(), 5);
+        assertEquals(secondClient.getAddress().getHouseNumber(), 65);
     }
 
     @Test
     public void addClient() {
         // act
-        ClientApi client = getTestClientApi(1L);
-        testRestTemplate.postForObject(HTTP_LOCALHOST + port + "/clients", client, ClientApi.class);
+        ClientApi client = sampleClientData.getTestClientApi();
+        ClientApi addedClient = testRestTemplate.postForObject(HTTP_LOCALHOST + port + "/clients", client, ClientApi.class);
 
+        Optional<Client> clientFromDb = clientRepository.findById(addedClient.getId());
 
-        Optional<Client> clientsFromDb = clientRepository.findById(1L);
-
-        Client clientApi = clientsFromDb.get();
+        Client clientApi = clientFromDb.get();
         // assert
         assertEquals(clientApi.getName(), "sampleName");
         assertEquals(clientApi.getSurname(), "sampleSurname");
-    }
-
-    private ClientApi getTestClientApi(Long id) {
-        ClientApi clientApi = new ClientApi();
-        clientApi.setName("sampleName");
-        clientApi.setSurname("sampleSurname");
-        AddressApi address = new AddressApi();
-        address.setCity("Gliwice");
-        address.setStreet("Zwycięstwa");
-        address.setZipCode("44-100");
-        address.setFlatNumber(5);
-        address.setHouseNumber(65);
-
-        return clientApi;
-    }
-
-    private Client getTestClient(Long id) {
-        Client client = new Client();
-        client.setId(id);
-        client.setName("sampleName");
-        client.setSurname("sampleSurname");
-        Address address = new Address();
-        address.setId(id);
-        address.setCity("Gliwice");
-        address.setStreet("Zwycięstwa");
-        address.setZipCode("44-100");
-        address.setFlatNumber(5);
-        address.setHouseNumber(65);
-
-        return client;
+        assertNotNull(clientApi.getAddress());
     }
 }

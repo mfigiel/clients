@@ -22,5 +22,4 @@ public class AddressApi {
     private Integer flatNumber;
     @NonNull
     private String zipCode;
-
 }

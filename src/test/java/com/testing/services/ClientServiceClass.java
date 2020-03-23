@@ -1,5 +1,6 @@
 package com.testing.services;
 
+import com.testing.api.resource.AddressApi;
 import com.testing.api.resource.ClientApi;
 import com.testing.repository.ClientRepository;
 import com.testing.repository.entity.Client;
@@ -12,6 +13,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
+import sampleDataForTests.SampleClientData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,22 +40,19 @@ public class ClientServiceClass {
     @MockBean
     private ClientRepository clientRepository;
 
+    private SampleClientData sampleClientData = new SampleClientData();
+
     @Before
     public void setUp() {
-        Client client = new Client();
-        client.setId(1L);
-        client.setName("sampleName");
 
         Mockito.when(clientRepository.findById((long) 1))
-                .thenReturn(Optional.of(client));
+                .thenReturn(Optional.of(sampleClientData.getTestClient()));
 
         List<Client> clientList = new ArrayList<>();
 
-        Client clientSecond = new Client();
-        clientSecond.setId(2L);
-        clientSecond.setName("sampleName2");
-        clientList.add(client);
-        clientList.add(clientSecond);
+        clientList.add(sampleClientData.getTestClient());
+        clientList.add(sampleClientData.getTestClient());
+
         Mockito.when(clientRepository.findAll())
                 .thenReturn(clientList);
     }
@@ -76,4 +75,18 @@ public class ClientServiceClass {
         assertThat(found.get(1).getName())
                 .isEqualTo("sampleName2");
     }
+
+    @Test
+    public void addClient() {
+        ClientApi added = clientService.addClient(sampleClientData.getTestClientApi());
+
+        assertEquals(added.getName(), "sampleName");
+        assertEquals(added.getSurname(), "sampleSurname");
+        assertEquals(added.getAddress().getCity(), "Gliwice");
+        assertEquals(added.getAddress().getStreet(), "Zwycięstwa");
+        assertEquals(added.getAddress().getZipCode(), "44-100");
+        assertEquals(added.getAddress().getFlatNumber(), 5);
+        assertEquals(added.getAddress().getHouseNumber(), 65);
+    }
+
 }
