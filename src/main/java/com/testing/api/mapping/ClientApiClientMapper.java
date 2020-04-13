@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 
 import java.util.List;
 
-@Mapper(componentModel = "ClientApiClientMapper")
+@Mapper(componentModel = "spring")
 public interface ClientApiClientMapper {
     ClientApi clientDtoToClientApi(Client source);
     Client clientApiToClientDto(ClientApi source);

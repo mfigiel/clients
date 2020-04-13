@@ -1,6 +1,6 @@
 package com.testing.services;
 
-import com.testing.api.mapping.ClientApiClientMapperImpl;
+import com.testing.api.mapping.ClientApiClientMapper;
 import com.testing.api.resource.ClientApi;
 import com.testing.repository.ClientRepository;
 import com.testing.repository.entity.Client;
@@ -16,7 +16,8 @@ public class ClientService {
 
     @Autowired
     private ClientRepository clientRepository;
-    ClientApiClientMapperImpl clientApiClientMapper = new ClientApiClientMapperImpl();
+    @Autowired
+    ClientApiClientMapper clientApiClientMapper;
 
     public List<ClientApi> getClients() {
         return clientApiClientMapper.clientListToClientApiList((List<Client>) clientRepository.findAll());

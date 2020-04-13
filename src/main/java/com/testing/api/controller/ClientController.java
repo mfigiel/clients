@@ -2,17 +2,17 @@ package com.testing.api.controller;
 
 import com.testing.api.resource.ClientApi;
 import com.testing.services.ClientService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping
+@RequiredArgsConstructor
 public class ClientController {
 
-    @Autowired
-    ClientService clientService;
+    private final ClientService clientService;
 
     @GetMapping("/clients")
     public List<ClientApi> getClients() {
