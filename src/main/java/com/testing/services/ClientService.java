@@ -17,7 +17,7 @@ public class ClientService {
     @Autowired
     private ClientRepository clientRepository;
     @Autowired
-    ClientApiClientMapper clientApiClientMapper;
+    private ClientApiClientMapper clientApiClientMapper;
 
     public List<ClientApi> getClients() {
         return clientApiClientMapper.clientListToClientApiList((List<Client>) clientRepository.findAll());

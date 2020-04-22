@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotEmpty;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,13 +15,13 @@ public class ClientApi {
 
     private Long id;
 
-    @NotNull(message = "Name is mandatory and must not be blank.")
+    @NotEmpty(message = "Name is mandatory and must not be blank.")
     private String name;
 
-    @NotNull(message = "Surname is mandatory and must not be blank.")
+    @NotEmpty(message = "Surname is mandatory and must not be blank.")
     private String Surname;
 
-    @NotNull(message = "Address is mandatory and must not be blank.")
+    @NotEmpty(message = "Address is mandatory and must not be blank.")
     private AddressApi address;
 
 }
