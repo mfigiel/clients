@@ -1,9 +1,9 @@
 package sampleDataForTests;
 
-import com.testing.api.resource.AddressApi;
-import com.testing.api.resource.ClientApi;
-import com.testing.repository.entity.Address;
-import com.testing.repository.entity.Client;
+import com.clients.api.resource.AddressApi;
+import com.clients.api.resource.ClientApi;
+import com.clients.repository.entity.Address;
+import com.clients.repository.entity.Client;
 
 public class SampleClientData {
 
