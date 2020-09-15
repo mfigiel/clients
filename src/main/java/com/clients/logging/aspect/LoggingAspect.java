@@ -14,8 +14,8 @@ public class LoggingAspect {
     private static final Logger LOGGER = LoggerFactory.getLogger(LoggingAspect.class);
 
     @Around("(execution(* com.clients.api.controller..*(..)))")
-    public Object log(ProceedingJoinPoint jp) {
-        Object result = null;
+    public Object log(ProceedingJoinPoint jp) throws Throwable {
+        Object result;
         final long start = System.currentTimeMillis();
         try {
             result = jp.proceed();
@@ -29,6 +29,7 @@ public class LoggingAspect {
             LOGGER.info("{} threw {} took {} milliseconds",
                     jp.getSignature().toShortString(), ex.getClass().getSimpleName(),
                     (System.currentTimeMillis() - start));
+            throw ex;
         }
         return result;
     }

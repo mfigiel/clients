@@ -1,6 +1,5 @@
-package com.clients.conguration;
+package com.clients.configuration;
 
-import com.clients.configuration.SwaggerConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -18,7 +17,6 @@ public class SwaggerConfigTest {
     @Test
     public void method() {
         Docket docket = swaggerConfig.documentApi();
-
         assertThat("Invalid swagger config", docket, is(notNullValue()));
     }
 }

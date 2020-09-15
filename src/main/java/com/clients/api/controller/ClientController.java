@@ -24,9 +24,8 @@ public class ClientController {
         return clientService.addClient(client);
     }
 
-    @RequestMapping(value = "/client/{id}", method = RequestMethod.GET)
+    @GetMapping(value = "/client/{id}")
     public ClientApi getClientInformation(@PathVariable("id") long id) {
-        ClientApi a = clientService.getClient(id);
         return clientService.getClient(id);
 
     }
