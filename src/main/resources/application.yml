@@ -3,6 +3,18 @@ server:
 spring:
   application:
     name: clients
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+  cloud:
+    stream:
+      bindings:
+        input:
+          destination: sendTransaction
+          group: transactionQueue
+
 eureka:
   client:
     serviceUrl:
