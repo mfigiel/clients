@@ -7,7 +7,7 @@ import java.text.SimpleDateFormat;
 
 @Component
 public final class ConfiguredObjectMapper {
-    private static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    private static final String DATE_TIME_FORMAT = "dd-MM-yyyy HH:mm:ss";
 
     private final ObjectMapper mapper = new ObjectMapper();
 

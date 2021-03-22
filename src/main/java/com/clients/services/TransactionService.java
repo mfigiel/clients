@@ -13,7 +13,6 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -37,18 +36,21 @@ public class TransactionService {
         log.info("Transaction saved");
     }
 
-    public List<Transaction> getAllClientTransaction(Long id) {
+    public List<Object> getAllClientTransaction(Long id) {
         Query query = new Query(Criteria
                 .where("client.id").is(id));
-        return mongoTemplate.find(query, Transaction.class, TRANSACTION_COLLECTION);
+        return mongoTemplate.find(query, Object.class, TRANSACTION_COLLECTION);
     }
 
-    public List<Transaction> getAllClientTransactionWithDatePeriod(Long id, Date dateFrom, Date dateTo) {
+    public List<Object> getAllClientTransactionWithDatePeriod(Long id, String dateFrom, String dateTo) {
         Query query = new Query(Criteria
                 .where("client.id").is(id)
-                .and("order.orderDate").gt(dateFrom)
-                .and("order.orderDate").lt(dateTo));
-        return mongoTemplate.find(query, Transaction.class, TRANSACTION_COLLECTION);
+                .andOperator(
+                        Criteria.where("order.orderDate").gte(dateFrom),
+                        Criteria.where("order.orderDate").lt(dateTo)
+                )
+        );
+        return mongoTemplate.find(query, Object.class, TRANSACTION_COLLECTION);
     }
 
     private Document convertTransactionToMongoDocument(Transaction transaction) {
