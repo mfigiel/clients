@@ -21,13 +21,16 @@ import java.util.Map;
 @Service
 public class TransactionService {
 
-    private static final String TRANSACTION_COLLECTION = "Transaction";
+    private String TRANSACTION_COLLECTION;
     private MongoTemplate mongoTemplate;
     private ObjectMapper objectMapper;
 
     public TransactionService(MongoTemplate mongoTemplate, ConfiguredObjectMapper objectMapper) {
         this.mongoTemplate = mongoTemplate;
         this.objectMapper = objectMapper.getObjectMapper();
+        TRANSACTION_COLLECTION = ((System.getenv().get("COLLECTION_TEST") != null) ? "Transaction-test" : "Transaction");
+        log.info(String.format("collection name: %s", TRANSACTION_COLLECTION));
+
     }
 
     @StreamListener(target = Sink.INPUT)
