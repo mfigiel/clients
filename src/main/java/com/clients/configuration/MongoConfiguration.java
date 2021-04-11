@@ -4,6 +4,7 @@ import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
@@ -14,7 +15,7 @@ import javax.annotation.PreDestroy;
 @Configuration
 public class MongoConfiguration extends AbstractMongoClientConfiguration {
 
-    private static final String CONNECTION_STRING = "mongodb+srv://admin:admin@cluster0.yvucs.mongodb.net/webshop?retryWrites=true&w=majority";
+    private String CONNECTION_STRING = "mongodb+srv://user:user@cluster0.yvucs.mongodb.net/webshop?retryWrites=true&w=majority";
     private static final String WEBSHOP = "webshop";
 
     private MongoClient mongoClient = mongoClient();
