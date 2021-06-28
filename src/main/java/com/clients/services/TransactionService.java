@@ -12,7 +12,9 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -42,7 +44,11 @@ public class TransactionService {
     public List<Object> getAllClientTransaction(Long id) {
         Query query = new Query(Criteria
                 .where("client.id").is(id));
-        return mongoTemplate.find(query, Object.class, TRANSACTION_COLLECTION);
+        List<Object> transactions = mongoTemplate.find(query, Object.class, TRANSACTION_COLLECTION);
+        if (CollectionUtils.isEmpty(transactions)) {
+            return new ArrayList<>();
+        }
+        return transactions;
     }
 
     public List<Object> getAllClientTransactionWithDatePeriod(Long id, String dateFrom, String dateTo) {

@@ -5,9 +5,10 @@ import com.clients.api.resource.ClientApi;
 import com.clients.repository.ClientRepository;
 import com.clients.repository.entity.Client;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,7 +33,8 @@ public class ClientService {
 
     public ClientApi getClient(long id) {
         Optional<Client> client = Optional.ofNullable(clientRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("client id: " + id)));
+                .orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.NOT_FOUND, "client id: " + id)));
 
         return clientApiClientMapper.clientDtoToClientApi(client.get());
     }

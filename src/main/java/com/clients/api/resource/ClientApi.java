@@ -13,7 +13,7 @@ public class ClientApi {
 
     private Long id;
     private String name;
-    private String Surname;
+    private String surname;
     private AddressApi address;
 
 }

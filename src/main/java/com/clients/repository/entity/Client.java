@@ -10,6 +10,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "Clients")
 public class Client {
     @Id
@@ -24,9 +25,5 @@ public class Client {
             cascade =  CascadeType.ALL,
             mappedBy = "client")
     private Address address;
-
-    public Client() {
-
-    }
 
 }

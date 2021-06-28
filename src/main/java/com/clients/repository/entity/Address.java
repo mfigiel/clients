@@ -9,6 +9,7 @@ import javax.persistence.*;
 @Setter
 @AllArgsConstructor
 @Table(name = "Address")
+@NoArgsConstructor
 public class Address {
 
     @Id
@@ -23,9 +24,5 @@ public class Address {
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "client_id", nullable = false)
     private Client client;
-
-    public Address() {
-
-    }
 
 }
